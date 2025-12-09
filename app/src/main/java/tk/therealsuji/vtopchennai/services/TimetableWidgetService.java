@@ -129,26 +129,26 @@ public class TimetableWidgetService extends RemoteViewsService {
                 // Styling based on completion
                 if (isCompleted) {
                     // Past classes: Dull/dimmed look
-                    views.setInt(R.id.layout_item_root, "setBackgroundResource", R.drawable.background_widget_item_completed);
+                    views.setInt(R.id.layout_item_card, "setBackgroundResource", R.drawable.background_widget_item_completed);
                     
-                    // Use "Hint" color for dull text as it maps to a disabled/secondary color in both themes
+                    // Use "Hint" color for dull text
                     int dullColor = context.getColor(R.color.widget_text_hint);
                     views.setTextColor(R.id.text_view_course_title, dullColor);
                     views.setTextColor(R.id.text_view_venue, dullColor);
                     views.setTextColor(R.id.text_view_timing, dullColor);
                 } else {
                     // Upcoming/Active classes: Highlighted/Normal look
-                    views.setInt(R.id.layout_item_root, "setBackgroundResource", R.drawable.background_widget_item);
+                    views.setInt(R.id.layout_item_card, "setBackgroundResource", R.drawable.background_widget_item);
                     
                     // Use primary/secondary colors from our theme resources
                     views.setTextColor(R.id.text_view_course_title, context.getColor(R.color.widget_text_primary));
-                    views.setTextColor(R.id.text_view_venue, context.getColor(R.color.widget_text_secondary)); // Secondary
-                    views.setTextColor(R.id.text_view_timing, context.getColor(R.color.widget_text_secondary)); // Secondary
+                    views.setTextColor(R.id.text_view_venue, context.getColor(R.color.widget_text_secondary)); 
+                    views.setTextColor(R.id.text_view_timing, context.getColor(R.color.widget_text_secondary)); 
                 }
 
                 // Click intent (using the day/list template from provider)
                 Intent fillInIntent = new Intent();
-                views.setOnClickFillInIntent(R.id.layout_item_root, fillInIntent);
+                views.setOnClickFillInIntent(R.id.layout_item_card, fillInIntent);
 
                 return views;
             } catch (Exception e) {
