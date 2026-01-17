@@ -67,13 +67,13 @@ import tk.therealsuji.vtopchennai.receivers.ExamNotificationReceiver;
 import tk.therealsuji.vtopchennai.receivers.TimetableNotificationReceiver;
 
 public class SettingsRepository {
-    public static final String APP_BASE_URL = "https://vtopchennai.therealsuji.tk";
+    public static final String APP_BASE_URL = "https://legitcoconut.github.io/vtop";
     public static final String APP_ABOUT_URL = APP_BASE_URL + "/about.json";
-    public static final String APP_PRIVACY_URL = APP_BASE_URL + "/privacy-policy";
+    public static final String APP_PRIVACY_URL = APP_BASE_URL + "/privacy-policy.html";
 
-    public static final String DEVELOPER_BASE_URL = "https://therealsuji.tk";
+    public static final String DEVELOPER_BASE_URL = "https://github.com/legitcoconut";
 
-    public static final String GITHUB_BASE_URL = "https://github.com/therealsujitk/android-vtop-chennai";
+    public static final String GITHUB_BASE_URL = "https://github.com/legitcoconut/vtop";
     public static final String GITHUB_FEATURE_URL = GITHUB_BASE_URL + "/issues";
     public static final String GITHUB_ISSUE_URL = GITHUB_BASE_URL + "/issues";
 
