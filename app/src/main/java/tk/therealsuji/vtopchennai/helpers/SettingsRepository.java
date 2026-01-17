@@ -471,4 +471,80 @@ public class SettingsRepository {
             throw new RuntimeException(e);
         }
     }
+
+    public static void setAssignedSaturday(Context context, int targetDayIndex) {
+        SharedPreferences prefs = getSharedPreferences(context);
+        long expiryTime = getNextSaturdayEndOfDayTimestamp();
+        prefs.edit()
+                .putInt("assigned_saturday_day", targetDayIndex)
+                .putLong("assigned_saturday_expiry", expiryTime)
+                .apply();
+    }
+
+    public static int getAssignedSaturday(Context context) {
+        SharedPreferences prefs = getSharedPreferences(context);
+        long expiryTime = prefs.getLong("assigned_saturday_expiry", 0);
+        int assignedDay = prefs.getInt("assigned_saturday_day", -1);
+
+        if (assignedDay != -1 && System.currentTimeMillis() < expiryTime) {
+            return assignedDay;
+        } else if (assignedDay != -1) {
+            // Expired, clear it
+            prefs.edit()
+                    .remove("assigned_saturday_day")
+                    .remove("assigned_saturday_expiry")
+                    .apply();
+        }
+        return -1;
+    }
+
+    private static long getNextSaturdayEndOfDayTimestamp() {
+        Calendar calendar = Calendar.getInstance();
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        int daysUntilSaturday = Calendar.SATURDAY - dayOfWeek;
+        if (daysUntilSaturday < 0) {
+            // Should not happen if we only allow assigning mostly, but if it's Saturday, daysUntilSaturday is 0.
+            // If it's Saturday, we want the end of *today*.
+            // If it's Sunday (1), SATURDAY (7) - 1 = 6 days.
+        }
+        
+        // If it is already Saturday, we want the end of THIS Saturday.
+        // Logic: Set to Saturday, set time to 23:59:59.999
+        
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        
+        // If for some reason the calculated saturday is in the past (though Calendar.DAY_OF_WEEK usually stays in current week),
+        // we might not need to adjust if we trust the user is doing this during the week for the upcoming saturday.
+        // However, `set(DAY_OF_WEEK)` behavior depends on the locale's first day of week.
+        // Safest is ensuring we are targeting the *current* or *upcoming* Saturday.
+        
+        if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
+             // If we ended up in the past (e.g. it's late Saturday night and we just missed it, or week boundary issues), add 7 days?
+             // Actually, if it's Saturday, we want the end of *this* Saturday.
+             // If it is Sunday, `set(SATURDAY)` might jump back to yesterday.
+             // Let's explicitly check.
+             
+             // If today is Sunday..Friday, we want the upcoming Saturday.
+             // If today is Saturday, we want today.
+             
+             Calendar validCal = Calendar.getInstance();
+             if (validCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
+                  // Move forward to Saturday
+                  while (validCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
+                      validCal.add(Calendar.DAY_OF_YEAR, 1);
+                  }
+             }
+             validCal.set(Calendar.HOUR_OF_DAY, 23);
+             validCal.set(Calendar.MINUTE, 59);
+             validCal.set(Calendar.SECOND, 59);
+             validCal.set(Calendar.MILLISECOND, 999);
+             return validCal.getTimeInMillis();
+        }
+
+        return calendar.getTimeInMillis();
+    }
 }

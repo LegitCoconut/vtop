@@ -13,6 +13,7 @@ import java.util.Locale;
 
 import tk.therealsuji.vtopchennai.R;
 import tk.therealsuji.vtopchennai.helpers.AppDatabase;
+import tk.therealsuji.vtopchennai.helpers.SettingsRepository;
 import tk.therealsuji.vtopchennai.interfaces.TimetableDao;
 import tk.therealsuji.vtopchennai.models.Timetable;
 
@@ -65,6 +66,13 @@ public class TimetableWidgetService extends RemoteViewsService {
 
                 Calendar calendar = Calendar.getInstance();
                 int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+                
+                if (dayOfWeek == 6) { // Saturday
+                    int assignedDay = SettingsRepository.getAssignedSaturday(context);
+                    if (assignedDay != -1) {
+                        dayOfWeek = assignedDay;
+                    }
+                }
                 
                 android.util.Log.d("TimetableWidget", "Loading data for day: " + dayOfWeek);
 

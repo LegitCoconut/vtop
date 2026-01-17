@@ -18,6 +18,7 @@ import java.util.Locale;
 import tk.therealsuji.vtopchennai.R;
 import tk.therealsuji.vtopchennai.activities.MainActivity;
 import tk.therealsuji.vtopchennai.helpers.AppDatabase;
+import tk.therealsuji.vtopchennai.helpers.SettingsRepository;
 import tk.therealsuji.vtopchennai.interfaces.TimetableDao;
 import tk.therealsuji.vtopchennai.models.Timetable;
 import tk.therealsuji.vtopchennai.services.TimetableWidgetService;
@@ -95,6 +96,14 @@ public class TimetableWidgetProvider extends AppWidgetProvider {
                 AppDatabase appDatabase = AppDatabase.getInstance(context);
                 TimetableDao timetableDao = appDatabase.timetableDao();
                 int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+                
+                if (dayOfWeek == 6) { // Saturday
+                    int assignedDay = SettingsRepository.getAssignedSaturday(context);
+                    if (assignedDay != -1) {
+                         dayOfWeek = assignedDay;
+                    }
+                }
+                
                 List<Timetable.AllData> classes = timetableDao.getForWidgetSync(dayOfWeek);
 
                 if (classes == null || classes.isEmpty()) {
