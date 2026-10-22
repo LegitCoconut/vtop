@@ -47,7 +47,7 @@ the [good first issues](https://github.com/legitcoconut/vtop/labels/good%20first
 ## License
 
 ```
-Copyright 2020 - 2024  Sujit Kumar
+Copyright 2020 - 2026  Sujit Kumar
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
